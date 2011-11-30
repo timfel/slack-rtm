@@ -539,6 +539,20 @@ by the rtm package. `rtm-tasks-get-list'"
   `(defun ,(intern (concat "slack-rtm-task-" field)) (task)
      (cdr (assoc ,field task))))
 
+(defun slack-rtm-show-or-open ()
+  (interactive)
+  (if (eq nil (get-buffer slack-rtm-buffer-name))
+      (slack-rtm slack-rtm-default-query))
+  (switch-to-buffer-other-window slack-rtm-buffer-name))
+
+(defun slack-rtm-reload-current-buffer ()
+  (interactive)
+  (let ((latest-buffer-name (generate-new-buffer-name slack-rtm-buffer-name)))
+    (save-selected-window
+      (slack-rtm slack-rtm-default-query)
+      (buffer-swap-text (get-buffer latest-buffer-name))
+      (kill-buffer latest-buffer-name))))
+
 (slack-rtm-task-prop-defun "id")
 (slack-rtm-task-prop-defun "list-id")
 (slack-rtm-task-prop-defun "taskseries-id")
